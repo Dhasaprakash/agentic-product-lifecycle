@@ -1,0 +1,104 @@
+package {{ package_name }}.service;
+
+import {{ package_name }}.model.{{ service_name }}Request;
+import {{ package_name }}.model.{{ service_name }}Response;
+import {{ package_name }}.model.{{ service_name }}Entity;
+import {{ package_name }}.repository.{{ service_name }}Repository;
+import {{ package_name }}.exception.{{ service_name }}NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Service layer for {{ service_name }} business logic
+ */
+@Service
+@Transactional
+public class {{ service_name }}Service {
+
+    private final {{ service_name }}Repository {{ service_name_lower }}Repository;
+
+    @Autowired
+    public {{ service_name }}Service({{ service_name }}Repository {{ service_name_lower }}Repository) {
+        this.{{ service_name_lower }}Repository = {{ service_name_lower }}Repository;
+    }
+
+    /**
+     * Creates a new {{ service_name_lower }}
+     */
+    public {{ service_name }}Response create{{ service_name }}({{ service_name }}Request request) {
+        {{ service_name }}Entity entity = mapToEntity(request);
+        {{ service_name }}Entity savedEntity = {{ service_name_lower }}Repository.save(entity);
+        return mapToResponse(savedEntity);
+    }
+
+    /**
+     * Retrieves a {{ service_name_lower }} by ID
+     */
+    @Transactional(readOnly = true)
+    public {{ service_name }}Response get{{ service_name }}(Long id) {
+        {{ service_name }}Entity entity = {{ service_name_lower }}Repository.findById(id)
+                .orElseThrow(() -> new {{ service_name }}NotFoundException("{{ service_name }} not found with id: " + id));
+        return mapToResponse(entity);
+    }
+
+    /**
+     * Retrieves all {{ service_name_lower }}s
+     */
+    @Transactional(readOnly = true)
+    public List<{{ service_name }}Response> getAll{{ service_name }}s() {
+        return {{ service_name_lower }}Repository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Updates an existing {{ service_name_lower }}
+     */
+    public {{ service_name }}Response update{{ service_name }}(Long id, {{ service_name }}Request request) {
+        {{ service_name }}Entity existingEntity = {{ service_name_lower }}Repository.findById(id)
+                .orElseThrow(() -> new {{ service_name }}NotFoundException("{{ service_name }} not found with id: " + id));
+        
+        updateEntityFromRequest(existingEntity, request);
+        {{ service_name }}Entity updatedEntity = {{ service_name_lower }}Repository.save(existingEntity);
+        return mapToResponse(updatedEntity);
+    }
+
+    /**
+     * Deletes a {{ service_name_lower }}
+     */
+    public void delete{{ service_name }}(Long id) {
+        if (!{{ service_name_lower }}Repository.existsById(id)) {
+            throw new {{ service_name }}NotFoundException("{{ service_name }} not found with id: " + id);
+        }
+        {{ service_name_lower }}Repository.deleteById(id);
+    }
+
+    /**
+     * Maps request to entity
+     */
+    private {{ service_name }}Entity mapToEntity({{ service_name }}Request request) {
+        {{ service_name }}Entity entity = new {{ service_name }}Entity();
+        // TODO: Implement mapping logic based on your domain model
+        return entity;
+    }
+
+    /**
+     * Maps entity to response
+     */
+    private {{ service_name }}Response mapToResponse({{ service_name }}Entity entity) {
+        {{ service_name }}Response response = new {{ service_name }}Response();
+        // TODO: Implement mapping logic based on your domain model
+        return response;
+    }
+
+    /**
+     * Updates entity from request
+     */
+    private void updateEntityFromRequest({{ service_name }}Entity entity, {{ service_name }}Request request) {
+        // TODO: Implement update logic based on your domain model
+    }
+}

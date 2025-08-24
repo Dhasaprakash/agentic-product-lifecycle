@@ -1,0 +1,64 @@
+package {{ package_name }}.controller;
+
+import {{ package_name }}.service.{{ service_name }}Service;
+import {{ package_name }}.model.{{ service_name }}Request;
+import {{ package_name }}.model.{{ service_name }}Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * REST Controller for {{ service_name }} operations
+ */
+@RestController
+@RequestMapping("/api/v1/{{ service_name_lower }}")
+@Tag(name = "{{ service_name }}", description = "{{ service_description }}")
+public class {{ service_name }}Controller {
+
+    private final {{ service_name }}Service {{ service_name_lower }}Service;
+
+    @Autowired
+    public {{ service_name }}Controller({{ service_name }}Service {{ service_name_lower }}Service) {
+        this.{{ service_name_lower }}Service = {{ service_name_lower }}Service;
+    }
+
+    @PostMapping
+    @Operation(summary = "Create new {{ service_name_lower }}", description = "Creates a new {{ service_name_lower }} resource")
+    public ResponseEntity<{{ service_name }}Response> create{{ service_name }}(@Valid @RequestBody {{ service_name }}Request request) {
+        {{ service_name }}Response response = {{ service_name_lower }}Service.create{{ service_name }}(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get {{ service_name_lower }} by ID", description = "Retrieves a {{ service_name_lower }} by its unique identifier")
+    public ResponseEntity<{{ service_name }}Response> get{{ service_name }}(@PathVariable Long id) {
+        {{ service_name }}Response response = {{ service_name_lower }}Service.get{{ service_name }}(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all {{ service_name_lower }}s", description = "Retrieves all {{ service_name_lower }} resources")
+    public ResponseEntity<List<{{ service_name }}Response>> getAll{{ service_name }}s() {
+        List<{{ service_name }}Response> responses = {{ service_name_lower }}Service.getAll{{ service_name }}s();
+        return ResponseEntity.ok(responses);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update {{ service_name_lower }}", description = "Updates an existing {{ service_name_lower }} resource")
+    public ResponseEntity<{{ service_name }}Response> update{{ service_name }}(@PathVariable Long id, @Valid @RequestBody {{ service_name }}Request request) {
+        {{ service_name }}Response response = {{ service_name_lower }}Service.update{{ service_name }}(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete {{ service_name_lower }}", description = "Deletes a {{ service_name_lower }} resource")
+    public ResponseEntity<Void> delete{{ service_name }}(@PathVariable Long id) {
+        {{ service_name_lower }}Service.delete{{ service_name }}(id);
+        return ResponseEntity.noContent().build();
+    }
+}

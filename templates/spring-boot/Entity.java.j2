@@ -1,0 +1,154 @@
+package {{ package_name }}.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+
+/**
+ * Entity class for {{ service_name }}
+ */
+@Entity
+@Table(name = "{{ table_name }}")
+@EntityListeners(AuditingEntityListener.class)
+public class {{ service_name }}Entity {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @NotBlank(message = "Name is required")
+    @Size(min = 1, max = 255, message = "Name must be between 1 and 255 characters")
+    @Column(name = "name", nullable = false, length = 255)
+    private String name;
+    
+    @Size(max = 1000, message = "Description cannot exceed 1000 characters")
+    @Column(name = "description", length = 1000)
+    private String description;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 50)
+    private {{ service_name }}Status status;
+    
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+    
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+    
+    // Default constructor
+    public {{ service_name }}Entity() {
+        this.status = {{ service_name }}Status.DRAFT;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    // Constructor with required fields
+    public {{ service_name }}Entity(String name, String description) {
+        this();
+        this.name = name;
+        this.description = description;
+    }
+    
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public {{ service_name }}Status getStatus() {
+        return status;
+    }
+    
+    public void setStatus({{ service_name }}Status status) {
+        this.status = status;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+    
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    
+    // Business methods
+    public void activate() {
+        this.status = {{ service_name }}Status.ACTIVE;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public void deactivate() {
+        this.status = {{ service_name }}Status.INACTIVE;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public boolean isActive() {
+        return {{ service_name }}Status.ACTIVE.equals(this.status);
+    }
+    
+    // Equals and HashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        {{ service_name }}Entity that = ({{ service_name }}Entity) o;
+        
+        return id != null ? id.equals(that.id) : that.id == null;
+    }
+    
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+    
+    // ToString
+    @Override
+    public String toString() {
+        return "{{ service_name }}Entity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
+}

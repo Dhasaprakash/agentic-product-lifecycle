@@ -1,0 +1,187 @@
+@startuml {{ bounded_context_name }}_Architecture
+
+!define RECTANGLE class
+
+title {{ bounded_context_name }} - Domain Architecture
+
+package "{{ bounded_context_name }} Context" {
+  class {{ bounded_context_name }} {
+    -id: {{ bounded_context_name }}Id
+    -name: String
+    -description: String
+    -status: {{ bounded_context_name }}Status
+    -createdAt: DateTime
+    -updatedAt: DateTime
+    --
+    +create(name: String, description: String)
+    +update(name: String, description: String)
+    +activate()
+    +deactivate()
+    +delete()
+  }
+  
+  class {{ bounded_context_name }}Id {
+    -value: String
+  }
+  
+  class {{ bounded_context_name }}Status {
+    -value: String
+  }
+  
+  class {{ bounded_context_name }}DomainService {
+    +validate{{ bounded_context_name }}({{ bounded_context_name_lower }}: {{ bounded_context_name }})
+    +calculateMetrics({{ bounded_context_name_lower }}: {{ bounded_context_name }})
+  }
+  
+  class {{ bounded_context_name }}Repository {
+    +save({{ bounded_context_name_lower }}: {{ bounded_context_name }}): {{ bounded_context_name }}
+    +findById(id: {{ bounded_context_name }}Id): Optional<{{ bounded_context_name }}>
+    +findAll(): List<{{ bounded_context_name }}>
+    +deleteById(id: {{ bounded_context_name }}Id)
+  }
+}
+
+package "Customer Context" {
+  class Customer {
+    -id: CustomerId
+    -name: String
+    -email: String
+    -status: CustomerStatus
+    --
+    +create(name: String, email: String)
+    +update(name: String, email: String)
+    +activate()
+    +deactivate()
+  }
+  
+  class CustomerId {
+    -value: String
+  }
+  
+  class CustomerStatus {
+    -value: String
+  }
+}
+
+package "Order Context" {
+  class Order {
+    -id: OrderId
+    -customerId: CustomerId
+    -items: List<OrderItem>
+    -status: OrderStatus
+    -totalAmount: Money
+    --
+    +create(customerId: CustomerId)
+    +addItem(productId: ProductId, quantity: int)
+    +removeItem(itemId: OrderItemId)
+    +confirm()
+    +cancel()
+  }
+  
+  class OrderItem {
+    -id: OrderItemId
+    -productId: ProductId
+    -quantity: int
+    -unitPrice: Money
+    -totalPrice: Money
+  }
+  
+  class OrderId {
+    -value: String
+  }
+  
+  class OrderItemId {
+    -value: String
+  }
+  
+  class OrderStatus {
+    -value: String
+  }
+}
+
+package "Payment Context" {
+  class Payment {
+    -id: PaymentId
+    -orderId: OrderId
+    -amount: Money
+    -status: PaymentStatus
+    -method: PaymentMethod
+    --
+    +create(orderId: OrderId, amount: Money, method: PaymentMethod)
+    +process()
+    +complete()
+    +fail(reason: String)
+  }
+  
+  class PaymentId {
+    -value: String
+  }
+  
+  class PaymentStatus {
+    -value: String
+  }
+  
+  class PaymentMethod {
+    -value: String
+  }
+}
+
+package "Shared Kernel" {
+  class Product {
+    -id: ProductId
+    -name: String
+    -description: String
+    -price: Money
+    -status: ProductStatus
+    --
+    +create(name: String, description: String, price: Money)
+    +update(name: String, description: String, price: Money)
+    +activate()
+    +deactivate()
+  }
+  
+  class ProductId {
+    -value: String
+  }
+  
+  class ProductStatus {
+    -value: String
+  }
+  
+  class Money {
+    -amount: BigDecimal
+    -currency: Currency
+  }
+}
+
+' Relationships
+{{ bounded_context_name }} --> {{ bounded_context_name }}Id
+{{ bounded_context_name }} --> {{ bounded_context_name }}Status
+{{ bounded_context_name }} --> {{ bounded_context_name }}DomainService
+{{ bounded_context_name }}DomainService --> {{ bounded_context_name }}
+{{ bounded_context_name }}Repository --> {{ bounded_context_name }}
+
+Customer --> CustomerId
+Customer --> CustomerStatus
+
+Order --> OrderId
+Order --> OrderItem
+Order --> OrderStatus
+Order --> CustomerId
+OrderItem --> OrderItemId
+OrderItem --> ProductId
+
+Payment --> PaymentId
+Payment --> OrderId
+Payment --> PaymentStatus
+Payment --> PaymentMethod
+
+Product --> ProductId
+Product --> ProductStatus
+Product --> Money
+
+' Context boundaries
+{{ bounded_context_name }}Repository ..> {{ bounded_context_name }}DomainService
+{{ bounded_context_name }}DomainService ..> {{ bounded_context_name }}
+
+@enduml

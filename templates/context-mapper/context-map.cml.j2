@@ -1,0 +1,194 @@
+ContextMap {{ bounded_context_name }}_ContextMap {
+  contains {{ bounded_context_name }}Context
+  contains SharedKernelContext
+  contains CustomerContext
+  contains OrderContext
+  contains PaymentContext
+  
+  {{ bounded_context_name }}Context [D] SharedKernelContext
+  {{ bounded_context_name }}Context [U] CustomerContext
+  {{ bounded_context_name }}Context [U] OrderContext
+  {{ bounded_context_name }}Context [U] PaymentContext
+  
+  CustomerContext [D] SharedKernelContext
+  OrderContext [D] SharedKernelContext
+  PaymentContext [D] SharedKernelContext
+}
+
+BoundedContext {{ bounded_context_name }}Context {
+  type FEATURE
+  domainVisionStatement "{{ domain_vision_statement }}"
+  
+  Aggregate {{ bounded_context_name }}Aggregate {
+    Entity {{ bounded_context_name }} {
+      aggregateRoot
+      
+      - {{ bounded_context_name }}Id id
+      - String name
+      - String description
+      - {{ bounded_context_name }}Status status
+      - DateTime createdAt
+      - DateTime updatedAt
+      
+      + create(String name, String description)
+      + update(String name, String description)
+      + activate()
+      + deactivate()
+      + delete()
+    }
+    
+    ValueObject {{ bounded_context_name }}Id {
+      - String value
+    }
+    
+    ValueObject {{ bounded_context_name }}Status {
+      - String value
+    }
+    
+    Service {{ bounded_context_name }}DomainService {
+      + validate{{ bounded_context_name }}({{ bounded_context_name }} {{ bounded_context_name_lower }})
+      + calculateMetrics({{ bounded_context_name }} {{ bounded_context_name_lower }})
+    }
+  }
+  
+  Aggregate CustomerAggregate {
+    Entity Customer {
+      aggregateRoot
+      
+      - CustomerId id
+      - String name
+      - String email
+      - CustomerStatus status
+      
+      + create(String name, String email)
+      + update(String name, String email)
+      + activate()
+      + deactivate()
+    }
+    
+    ValueObject CustomerId {
+      - String value
+    }
+    
+    ValueObject CustomerStatus {
+      - String value
+    }
+  }
+  
+  Aggregate OrderAggregate {
+    Entity Order {
+      aggregateRoot
+      
+      - OrderId id
+      - CustomerId customerId
+      - List<OrderItem> items
+      - OrderStatus status
+      - Money totalAmount
+      
+      + create(CustomerId customerId)
+      + addItem(ProductId productId, int quantity)
+      + removeItem(OrderItemId itemId)
+      + confirm()
+      + cancel()
+    }
+    
+    Entity OrderItem {
+      - OrderItemId id
+      - ProductId productId
+      - int quantity
+      - Money unitPrice
+      - Money totalPrice
+    }
+    
+    ValueObject OrderId {
+      - String value
+    }
+    
+    ValueObject OrderItemId {
+      - String value
+    }
+    
+    ValueObject OrderStatus {
+      - String value
+    }
+    
+    ValueObject Money {
+      - BigDecimal amount
+      - Currency currency
+    }
+  }
+  
+  Aggregate PaymentAggregate {
+    Entity Payment {
+      aggregateRoot
+      
+      - PaymentId id
+      - OrderId orderId
+      - Money amount
+      - PaymentStatus status
+      - PaymentMethod method
+      
+      + create(OrderId orderId, Money amount, PaymentMethod method)
+      + process()
+      + complete()
+      + fail(String reason)
+    }
+    
+    ValueObject PaymentId {
+      - String value
+    }
+    
+    ValueObject PaymentStatus {
+      - String value
+    }
+    
+    ValueObject PaymentMethod {
+      - String value
+    }
+  }
+  
+  Aggregate SharedKernelAggregate {
+    Entity Product {
+      aggregateRoot
+      
+      - ProductId id
+      - String name
+      - String description
+      - Money price
+      - ProductStatus status
+      
+      + create(String name, String description, Money price)
+      + update(String name, String description, Money price)
+      + activate()
+      + deactivate()
+    }
+    
+    ValueObject ProductId {
+      - String value
+    }
+    
+    ValueObject ProductStatus {
+      - String value
+    }
+  }
+}
+
+BoundedContext SharedKernelContext {
+  type GENERIC
+  domainVisionStatement "Shared kernel containing common domain concepts used across bounded contexts"
+}
+
+BoundedContext CustomerContext {
+  type FEATURE
+  domainVisionStatement "Manages customer information and relationships"
+}
+
+BoundedContext OrderContext {
+  type FEATURE
+  domainVisionStatement "Handles order management and processing"
+}
+
+BoundedContext PaymentContext {
+  type FEATURE
+  domainVisionStatement "Manages payment processing and financial transactions"
+}

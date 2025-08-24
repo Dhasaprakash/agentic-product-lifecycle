@@ -1,0 +1,26 @@
+# LLM Provider Dependencies for Multi-Provider Support
+# Core LangChain packages for different LLM providers
+
+# OpenAI (already included)
+langchain-openai>=0.1.0
+
+# Anthropic Claude
+langchain-anthropic>=0.1.0
+
+# Mistral AI
+langchain-mistralai>=0.1.0
+
+# Perplexity
+langchain-perplexity>=0.1.0
+
+# Groq (for Grok models)
+langchain-groq>=0.3.7
+groq>=0.30.0
+
+# Core LangChain
+langchain>=0.1.0
+langchain-core>=0.1.0
+
+# Additional dependencies that might be needed
+pydantic>=2.0.0
+typing-extensions>=4.0.0

@@ -1,0 +1,24 @@
+apiVersion: v2
+name: {{ service_name_lower }}
+description: {{ service_description }}
+type: application
+version: {{ version }}
+appVersion: "{{ version }}"
+
+keywords:
+  - spring-boot
+  - microservice
+  - {{ service_name_lower }}
+
+maintainers:
+  - name: Agentic AI Architect
+    email: ai-architect@example.com
+
+sources:
+  - https://github.com/your-org/{{ service_name_lower }}
+
+dependencies:
+  - name: postgresql
+    version: 12.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled

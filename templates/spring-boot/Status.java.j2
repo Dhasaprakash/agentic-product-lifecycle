@@ -1,0 +1,93 @@
+package {{ package_name }}.model;
+
+/**
+ * Status enum for {{ service_name }} entities
+ */
+public enum {{ service_name }}Status {
+    
+    /**
+     * Initial draft state
+     */
+    DRAFT("Draft"),
+    
+    /**
+     * Active and available for use
+     */
+    ACTIVE("Active"),
+    
+    /**
+     * Temporarily inactive
+     */
+    INACTIVE("Inactive"),
+    
+    /**
+     * Pending approval
+     */
+    PENDING("Pending"),
+    
+    /**
+     * Approved and ready
+     */
+    APPROVED("Approved"),
+    
+    /**
+     * Rejected
+     */
+    REJECTED("Rejected"),
+    
+    /**
+     * Archived/deleted
+     */
+    ARCHIVED("Archived");
+    
+    private final String displayName;
+    
+    {{ service_name }}Status(String displayName) {
+        this.displayName = displayName;
+    }
+    
+    /**
+     * Get the display name for this status
+     */
+    public String getDisplayName() {
+        return displayName;
+    }
+    
+    /**
+     * Check if this status represents an active state
+     */
+    public boolean isActive() {
+        return this == ACTIVE || this == APPROVED;
+    }
+    
+    /**
+     * Check if this status represents a draft state
+     */
+    public boolean isDraft() {
+        return this == DRAFT || this == PENDING;
+    }
+    
+    /**
+     * Check if this status represents a final state
+     */
+    public boolean isFinal() {
+        return this == APPROVED || this == REJECTED || this == ARCHIVED;
+    }
+    
+    /**
+     * Get status from display name
+     */
+    public static {{ service_name }}Status fromDisplayName(String displayName) {
+        for ({{ service_name }}Status status : values()) {
+            if (status.displayName.equalsIgnoreCase(displayName)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Unknown status: " + displayName);
+    }
+    
+    @Override
+    public String toString() {
+        return displayName;
+    }
+}

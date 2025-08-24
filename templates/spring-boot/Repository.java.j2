@@ -1,0 +1,48 @@
+package {{ package_name }}.repository;
+
+import {{ package_name }}.model.{{ service_name }}Entity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Repository interface for {{ service_name }} data access
+ */
+@Repository
+public interface {{ service_name }}Repository extends JpaRepository<{{ service_name }}Entity, Long> {
+    
+    /**
+     * Find {{ service_name_lower }} by name
+     */
+    Optional<{{ service_name }}Entity> findByName(String name);
+    
+    /**
+     * Find {{ service_name_lower }}s by status
+     */
+    List<{{ service_name }}Entity> findByStatus(String status);
+    
+    /**
+     * Find {{ service_name_lower }}s by name containing the given text
+     */
+    List<{{ service_name }}Entity> findByNameContainingIgnoreCase(String name);
+    
+    /**
+     * Custom query to find {{ service_name_lower }}s by description
+     */
+    @Query("SELECT s FROM {{ service_name }}Entity s WHERE s.description LIKE %:description%")
+    List<{{ service_name }}Entity> findByDescriptionContaining(@Param("description") String description);
+    
+    /**
+     * Check if {{ service_name_lower }} exists by name
+     */
+    boolean existsByName(String name);
+    
+    /**
+     * Count {{ service_name_lower }}s by status
+     */
+    long countByStatus(String status);
+}

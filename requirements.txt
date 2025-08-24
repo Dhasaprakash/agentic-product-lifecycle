@@ -1,0 +1,36 @@
+# Core dependencies
+langgraph>=0.0.20
+langchain>=0.1.0
+langchain-openai>=0.0.5
+pydantic>=2.5.0
+fastapi>=0.115.0
+uvicorn>=0.24.0
+
+# Azure DevOps integration
+azure-devops>=7.1.0b3
+requests>=2.31.0
+
+# Kubernetes and Helm
+kubernetes>=28.1.0
+pyyaml>=6.0.1
+
+# Code generation and templating
+jinja2>=3.1.2
+black>=23.11.0
+isort>=5.12.0
+
+# Testing
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+httpx>=0.27.1
+
+# Utilities
+python-dotenv>=1.0.0
+click>=8.1.7
+rich>=13.7.0
+typer>=0.9.0
+
+# Development
+pre-commit>=3.5.0
+mypy>=1.7.1
+flake8>=6.1.0
